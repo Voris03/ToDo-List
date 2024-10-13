@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import { TodoList } from './ToDoList/Todolist';
 
@@ -17,25 +17,25 @@ export type TaskType = {
 function App() {
     // BLL
 
-    const todolistTitle_1 = "What to learn"
-    const todolistTitle_2 = "What to buy"
+    const todolistTitle = "What to learn"
 
-    const tasks_1: TaskType[] = [
+    const [tasks, setTasks]  = useState<TaskType []>([  //initial state
         {id: 1,title: "HTML&CSS",isDone: true},
         {id: 2,title: "JS/TS",isDone: true},
         {id: 3,title: "React",isDone: false}
-    ]
-    const tasks_2: TaskType[] = [
-        {id: 1,title: "Milk",isDone: false},
-        {id: 2,title: "Bread",isDone: false},
-        {id: 3,title: "Butter",isDone: false}
-    ]
+    ])
+
+    const removeTask = (taskId: number) => {
+        // 1
+        const nextState: TaskType[] = tasks.filter(task => task.id !== taskId)
+        // 2
+        setTasks(nextState)
+    }
 
     // GUI
     return (
         <div className="App">
-            <TodoList title={todolistTitle_1} tasks={tasks_1}/>
-            <TodoList title={todolistTitle_2} tasks={tasks_2}/>
+            <TodoList title={todolistTitle} tasks={tasks} removeTask={removeTask}/>
         </div>
     );
 }
