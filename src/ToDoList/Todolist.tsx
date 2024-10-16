@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { FilterValuesType, TaskType } from "../App";
 import { Button } from "./Button";
 
@@ -11,7 +11,8 @@ type TodolistPropsType = {
 };
 
 export const TodoList = (props: TodolistPropsType) => {
-  const inputRef = useRef<HTMLInputElement>(null);
+
+    const [taskTitle, setTaskTitle] = useState("")
 
   const taskList: JSX.Element =
     props.tasks.length === 0 ? (
@@ -36,23 +37,22 @@ export const TodoList = (props: TodolistPropsType) => {
     );
 
   const onClickAddTaskHandler = () => {
-    if (inputRef.current) {
-        if(inputRef.current.value.length < 16) {
-            props.addTask(inputRef.current.value);
-            inputRef.current.value = "";
-        } else {
-            alert("to long")
-        }
-    }
+    props.addTask(taskTitle)
+    setTaskTitle("")
   };
+
+  const isTitleLengthValid = taskTitle.length <= 15
 
   return (
     <div className="todolist">
       <h3>{props.title}</h3>
       <div>
-        <input ref={inputRef} placeholder="max length title 15 characters"/>
-        <Button title={"+"} onClickHandler={onClickAddTaskHandler} />
-        <div>Max length title is 15 characters</div>
+
+        <input value={taskTitle} onChange={e => setTaskTitle(e.currentTarget.value)} placeholder="Max 15 characters"/>
+
+        <Button title={"+"} onClickHandler={onClickAddTaskHandler} isDisabled={!isTitleLengthValid}/>
+        { !isTitleLengthValid && <div style={{color: "red"}}>Max length title is 15 characters!</div>}
+        
       </div>
       {taskList}
       <div>
