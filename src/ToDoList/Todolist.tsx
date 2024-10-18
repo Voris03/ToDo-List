@@ -1,16 +1,17 @@
-import React, { useRef, useState, KeyboardEvent } from "react";
+import React, { useState, KeyboardEvent, ChangeEvent } from "react";
 import { FilterValuesType, TaskType } from "../App";
 import { Button } from "./Button";
 
-type TodolistPropsType = {
+type TodoListPropsType = {
   title: string;
   tasks: TaskType[];
   removeTask: (taskId: string) => void;
   changeFilter: (newFilter: FilterValuesType) => void;
   addTask: (title: string) => void;
+  setTaskNewStatus: (taskId: string, newStatus: boolean) => void;
 };
 
-export const TodoList = (props: TodolistPropsType) => {
+export const TodoList = (props: TodoListPropsType) => {
   const [taskTitle, setTaskTitle] = useState("");
 
   const taskList: JSX.Element =
@@ -19,16 +20,20 @@ export const TodoList = (props: TodolistPropsType) => {
     ) : (
       <ul>
         {props.tasks.map((task: TaskType) => {
+
+          const removeTaskHandler = () => props.removeTask(task.id);
+          const setTaskNewStatus = (e: ChangeEvent<HTMLInputElement>) =>
+            props.setTaskNewStatus(task.id, e.currentTarget.checked);
+
           return (
             <li>
-              <input type="checkbox" checked={task.isDone} />{" "}
+              <input
+                type="checkbox"
+                checked={task.isDone}
+                onChange={setTaskNewStatus}
+              />{" "}
               <span>{task.title}</span>
-              <Button
-                title={"x"}
-                onClickHandler={() => {
-                  props.removeTask(task.id);
-                }}
-              />
+              <Button title={"x"} onClickHandler={removeTaskHandler} />
             </li>
           );
         })}
@@ -36,22 +41,22 @@ export const TodoList = (props: TodolistPropsType) => {
     );
 
   const onClickAddTaskHandler = () => {
-    if(isTitleLengthValid){
-        props.addTask(taskTitle);
-        setTaskTitle("");
+    if (isTitleLengthValid) {
+      props.addTask(taskTitle);
+      setTaskTitle("");
     }
   };
 
   const onKeyDownAddTaskHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-    if(e.key === "Enter"){
-        onClickAddTaskHandler()
+    if (e.key === "Enter") {
+      onClickAddTaskHandler();
     }
-  }
+  };
 
   const isTitleLengthValid = taskTitle.length <= 15;
 
   return (
-    <div className="todolist">
+    <div className="todoList">
       <h3>{props.title}</h3>
       <div>
         <input

@@ -22,11 +22,11 @@ function App() {
 
     console.log(v1())
 
-    const todolistTitle = "What to learn"
+    const todoListTitle = "What to learn"
 
     const [tasks, setTasks]  = useState<TaskType []>([  //initial state
-        {id: v1(),title: "HTML&CSS",isDone: true},
-        {id: v1(),title: "JS/TS",isDone: true},
+        {id: v1(),title: "HTML&CSS",isDone: false},
+        {id: v1(),title: "JS/TS",isDone: false},
         {id: v1(),title: "React",isDone: false}
     ])
 
@@ -47,6 +47,11 @@ function App() {
         setTasks(copyState)
     }
 
+    const setTaskNewStatus = (taskId: string, newStatus: boolean) => {
+        const nextState: Array<TaskType> = tasks.map(task => task.id === taskId ? {...task, isDone: newStatus} : task)
+        setTasks(nextState)
+    }
+
     // GUI
 
     const [filter, setFilter] = useState<FilterValuesType>("all")
@@ -64,11 +69,12 @@ function App() {
     return (
         <div className="App">
             <TodoList
-                title={todolistTitle}
+                title={todoListTitle}
                 tasks={filteredTasks}
                 removeTask={removeTask}
                 changeFilter={changeFilter}
                 addTask = {addTask}
+                setTaskNewStatus={setTaskNewStatus}
             />
         </div>
     );
