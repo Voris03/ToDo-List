@@ -1,10 +1,12 @@
 import React, { useState, KeyboardEvent, ChangeEvent } from "react";
 import { FilterValuesType, TaskType } from "../App";
 import { Button } from "./Button";
+import { error } from "console";
 
 type TodoListPropsType = {
   title: string;
   tasks: TaskType[];
+  filter: FilterValuesType;
   removeTask: (taskId: string) => void;
   changeFilter: (newFilter: FilterValuesType) => void;
   addTask: (title: string) => void;
@@ -13,26 +15,28 @@ type TodoListPropsType = {
 
 export const TodoList = (props: TodoListPropsType) => {
   const [taskTitle, setTaskTitle] = useState("");
+  const [taskInputError, setTaskInputError] = useState(false);
 
   const taskList: JSX.Element =
     props.tasks.length === 0 ? (
       <div>Ваш список дел пуст</div>
     ) : (
-      <ul>
+      <ul className="container">
         {props.tasks.map((task: TaskType) => {
-
           const removeTaskHandler = () => props.removeTask(task.id);
           const setTaskNewStatus = (e: ChangeEvent<HTMLInputElement>) =>
             props.setTaskNewStatus(task.id, e.currentTarget.checked);
 
           return (
-            <li>
+            <li className="wrapper">
               <input
                 type="checkbox"
                 checked={task.isDone}
                 onChange={setTaskNewStatus}
               />{" "}
-              <span>{task.title}</span>
+              <span className={task.isDone ? "task-done" : "task"}>
+                {task.title}
+              </span>
               <Button title={"x"} onClickHandler={removeTaskHandler} />
             </li>
           );
@@ -41,8 +45,14 @@ export const TodoList = (props: TodoListPropsType) => {
     );
 
   const onClickAddTaskHandler = () => {
-    if (isTitleLengthValid) {
-      props.addTask(taskTitle);
+    const trimmedTaskTitle = taskTitle.trim();
+    if (trimmedTaskTitle) {
+      if (isTitleLengthValid) {
+        props.addTask(taskTitle);
+        setTaskTitle("");
+      }
+    } else {
+      setTaskInputError(true);
       setTaskTitle("");
     }
   };
@@ -56,14 +66,18 @@ export const TodoList = (props: TodoListPropsType) => {
   const isTitleLengthValid = taskTitle.length <= 15;
 
   return (
-    <div className="todoList">
+    <div className="todolist">
       <h3>{props.title}</h3>
       <div>
         <input
           value={taskTitle}
-          onChange={(e) => setTaskTitle(e.currentTarget.value)}
+          onChange={(e) => {
+            taskInputError && setTaskInputError(false);
+            setTaskTitle(e.currentTarget.value);
+          }}
           placeholder="Max 15 characters"
           onKeyDown={onKeyDownAddTaskHandler}
+          className={taskInputError ? "error" : ""}
         />
 
         <Button
@@ -71,25 +85,32 @@ export const TodoList = (props: TodoListPropsType) => {
           onClickHandler={onClickAddTaskHandler}
           isDisabled={!isTitleLengthValid}
         />
+
         {!isTitleLengthValid && (
           <div style={{ color: "red" }}>Max length title is 15 characters!</div>
         )}
+        {taskInputError && (
+          <div style={{ color: "red" }}>Title is required</div>
+        )}
       </div>
       {taskList}
-      <div>
+      <div className="wrapper">
         <Button
+          classes={props.filter === "all" ? "btn-filter-active" : ""}
           title={"All"}
           onClickHandler={() => {
             props.changeFilter("all");
           }}
         />
         <Button
+          classes={props.filter === "active" ? "btn-filter-active" : ""}
           title={"Active"}
           onClickHandler={() => {
             props.changeFilter("active");
           }}
         />
         <Button
+          classes={props.filter === "completed" ? "btn-filter-active" : ""}
           title={"Completed"}
           onClickHandler={() => {
             props.changeFilter("completed");
