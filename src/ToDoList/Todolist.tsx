@@ -2,6 +2,7 @@ import React, { useState, KeyboardEvent, ChangeEvent } from "react";
 import { FilterValuesType, TaskType } from "../App";
 import { Button } from "./Button";
 import { error } from "console";
+import { AddItemForm } from "./AddItemForm";
 
 type TodoListPropsType = {
   todolistId: string
@@ -16,8 +17,8 @@ type TodoListPropsType = {
 };
 
 export const TodoList = (props: TodoListPropsType) => {
-  const [taskTitle, setTaskTitle] = useState("");
-  const [taskInputError, setTaskInputError] = useState(false);
+  // const [taskTitle, setTaskTitle] = useState("");
+  // const [taskInputError, setTaskInputError] = useState(false);
 
   const taskList: JSX.Element =
     props.tasks.length === 0 ? (
@@ -46,26 +47,15 @@ export const TodoList = (props: TodoListPropsType) => {
       </ul>
     );
 
-  const onClickAddTaskHandler = () => {
-    const trimmedTaskTitle = taskTitle.trim();
-    if (trimmedTaskTitle) {
-      if (isTitleLengthValid) {
-        props.addTask(taskTitle, props.todolistId);
-        setTaskTitle("");
-      }
-    } else {
-      setTaskInputError(true);
-      setTaskTitle("");
-    }
+  const addTaskHandler = (itemTitle: string) => {
+    props.addTask(itemTitle, props.todolistId);
   };
 
-  const onKeyDownAddTaskHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      onClickAddTaskHandler();
-    }
-  };
-
-  const isTitleLengthValid = taskTitle.length <= 15;
+  // const onKeyDownAddTaskHandler = (e: KeyboardEvent<HTMLInputElement>) => {
+  //   if (e.key === "Enter") {
+  //     onClickAddTaskHandler();
+  //   }
+  // };
 
   return (
     <div className="todolist">
@@ -73,7 +63,7 @@ export const TodoList = (props: TodoListPropsType) => {
         {props.title}
         <Button title="x" onClickHandler={() => props.removeTodolist(props.todolistId)}/>
       </h3>
-      <div>
+      {/* <div>
         <input
           value={taskTitle}
           onChange={(e) => {
@@ -97,7 +87,9 @@ export const TodoList = (props: TodoListPropsType) => {
         {taskInputError && (
           <div style={{ color: "red" }}>Title is required</div>
         )}
-      </div>
+      </div> */}
+      <AddItemForm addItem={addTaskHandler} />
+      
       {taskList}
       <div className="wrapper">
         <Button
