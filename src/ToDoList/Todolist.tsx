@@ -3,17 +3,26 @@ import { FilterValuesType, TaskType } from "../App";
 import { Button } from "./Button";
 import { error } from "console";
 import { AddItemForm } from "./AddItemForm";
+import { EditableSpan } from "./EditableSpan";
 
 type TodoListPropsType = {
-  todolistId: string
+  todolistId: string;
   title: string;
   tasks: TaskType[];
   filter: FilterValuesType;
-  removeTodolist: (todolistId: string) => void
+  removeTodolist: (todolistId: string) => void;
   removeTask: (taskId: string, todolistId: string) => void;
-  changeTodolistFilter: (newFilter: FilterValuesType, todolistId: string) => void;
+  changeTodolistFilter: (
+    newFilter: FilterValuesType,
+    todolistId: string
+  ) => void;
   addTask: (title: string, todolistId: string) => void;
-  setTaskNewStatus: (taskId: string, newStatus: boolean, todolistId: string) => void;
+  setTaskNewStatus: (
+    taskId: string,
+    newStatus: boolean,
+    todolistId: string
+  ) => void;
+  changeTodolistItem: (title: string, todolistId: string) => void
 };
 
 export const TodoList = (props: TodoListPropsType) => {
@@ -26,9 +35,14 @@ export const TodoList = (props: TodoListPropsType) => {
     ) : (
       <ul className="container">
         {props.tasks.map((task: TaskType) => {
-          const removeTaskHandler = () => props.removeTask(task.id, props.todolistId);
+          const removeTaskHandler = () =>
+            props.removeTask(task.id, props.todolistId);
           const setTaskNewStatus = (e: ChangeEvent<HTMLInputElement>) =>
-            props.setTaskNewStatus(task.id, e.currentTarget.checked, props.todolistId);
+            props.setTaskNewStatus(
+              task.id,
+              e.currentTarget.checked,
+              props.todolistId
+            );
 
           return (
             <li className="wrapper">
@@ -57,12 +71,20 @@ export const TodoList = (props: TodoListPropsType) => {
   //   }
   // };
 
+  const changeTodolistTitleHandler = (title: string) => {
+    props.changeTodolistItem(title, props.todolistId)
+  }
+
   return (
     <div className="todolist">
       <h3>
-        {props.title}
-        <Button title="x" onClickHandler={() => props.removeTodolist(props.todolistId)}/>
+        <EditableSpan title={props.title} changeTitle={changeTodolistTitleHandler}/>
       </h3>
+      <Button
+        title="x"
+        onClickHandler={() => props.removeTodolist(props.todolistId)}
+      /> 
+      <AddItemForm addItem={addTaskHandler} />
       {/* <div>
         <input
           value={taskTitle}
@@ -88,8 +110,7 @@ export const TodoList = (props: TodoListPropsType) => {
           <div style={{ color: "red" }}>Title is required</div>
         )}
       </div> */}
-      <AddItemForm addItem={addTaskHandler} />
-      
+
       {taskList}
       <div className="wrapper">
         <Button

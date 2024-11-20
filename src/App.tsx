@@ -4,10 +4,10 @@ import { TodoList } from "./ToDoList/Todolist";
 import { v1 } from "uuid";
 import { AddItemForm } from "./ToDoList/AddItemForm";
 
-// Create
-// Read(filter, sort, search, view mode)
-// Update
-// Delete
+// Create +
+// Read(filter, sort, search, view mode) + 
+// Update + -
+// Delete +
 
 export type TaskType = {
   id: string;
@@ -132,6 +132,17 @@ function App() {
     setTasks({ ...tasks, [todolistID]: [] });
   };
 
+  const changeTodolistItem = (
+    title: string,
+    todolistId: string
+  ) => {
+    const newTodolistTitle = todolist.map(tl => {
+      return tl.id === todolistId ? {...tl, title} : tl
+    })
+    setTodolist(newTodolistTitle);
+  };
+
+
   // GUI
 
   return (
@@ -157,6 +168,7 @@ function App() {
             removeTodolist={removeTodolist}
             addTask={addTask}
             setTaskNewStatus={setTaskNewStatus}
+            changeTodolistItem={changeTodolistItem}
           />
         );
       })}
