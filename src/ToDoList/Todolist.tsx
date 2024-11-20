@@ -23,6 +23,7 @@ type TodoListPropsType = {
     todolistId: string
   ) => void;
   changeTodolistItem: (title: string, todolistId: string) => void
+  changeTaskTitle : (taskId: string, title: string, todolistId: string) => void
 };
 
 export const TodoList = (props: TodoListPropsType) => {
@@ -43,6 +44,9 @@ export const TodoList = (props: TodoListPropsType) => {
               e.currentTarget.checked,
               props.todolistId
             );
+          const changeTaskTitleHandler = (title: string) => {
+            props.changeTaskTitle(task.id, title, props.todolistId)
+          }
 
           return (
             <li className="wrapper">
@@ -51,9 +55,11 @@ export const TodoList = (props: TodoListPropsType) => {
                 checked={task.isDone}
                 onChange={setTaskNewStatus}
               />{" "}
-              <span className={task.isDone ? "task-done" : "task"}>
+              {/* <span className={task.isDone ? "task-done" : "task"}>
                 {task.title}
-              </span>
+              </span> */}
+
+              <EditableSpan changeTitle={changeTaskTitleHandler} title={task.title} />
               <Button title={"x"} onClickHandler={removeTaskHandler} />
             </li>
           );

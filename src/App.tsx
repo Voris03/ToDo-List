@@ -142,6 +142,14 @@ function App() {
     setTodolist(newTodolistTitle);
   };
 
+  const changeTaskTitle = (taskId: string, title: string, todolistId: string) => {
+    const newTodolistTasks = {
+      ...tasks,
+      [todolistId]: tasks[todolistId].map(t => t.id === taskId ? {...t, title: title} : t)
+    }
+    setTasks(newTodolistTasks)
+  }
+
 
   // GUI
 
@@ -169,6 +177,7 @@ function App() {
             addTask={addTask}
             setTaskNewStatus={setTaskNewStatus}
             changeTodolistItem={changeTodolistItem}
+            changeTaskTitle={changeTaskTitle}
           />
         );
       })}
