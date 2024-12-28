@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import "./App.css";
 import { TodoList } from "./ToDoList/Todolist";
 import { v1 } from "uuid";
-import { AddItemForm } from "./ToDoList/AddItemForm";
+import { AddItemForm } from "./components/AddItemForm";
 
 // Create +
-// Read(filter, sort, search, view mode) + 
+// Read(filter, sort, search, view mode) +
 // Update + -
 // Delete +
 
@@ -31,7 +31,6 @@ function App() {
   // BLL
   const todolistId_1 = v1();
   const todolistId_2 = v1();
-
   const [todolist, setTodolist] = useState<Array<TodolistType>>([
     {
       id: todolistId_1,
@@ -44,7 +43,6 @@ function App() {
       filter: "all",
     },
   ]);
-
   const [tasks, setTasks] = useState<TaskStateType>({
     [todolistId_1]: [
       { id: v1(), title: "HTML&CSS", isDone: false },
@@ -61,6 +59,7 @@ function App() {
   });
 
   // Tasks
+  // Удаление таски
   const removeTask = (taskId: string, todolistId: string) => {
     // // 1
     // const nextState: TaskType[] = tasks.filter((task) => task.id !== taskId);
@@ -68,11 +67,11 @@ function App() {
     // setTasks(nextState);
 
     setTasks({
-      ...tasks,
-      [todolistId]: tasks[todolistId].filter((t) => t.id !== taskId),
+      ...tasks, // делаем копию объекта таск
+      [todolistId]: tasks[todolistId].filter((t) => t.id !== taskId), // в нашем
     });
   };
-
+  // Добавление таски
   const addTask = (title: string, todolistId: string) => {
     const newTask: TaskType = {
       title: title,
@@ -86,7 +85,7 @@ function App() {
     // const copyState = [...tasks, newTask];
     // setTasks(copyState)
   };
-
+  // Изменение статуса таски
   const setTaskNewStatus = (
     taskId: string,
     newStatus: boolean,
@@ -102,8 +101,23 @@ function App() {
       ),
     });
   };
+  // Изменение название тасок
+  const changeTaskTitle = (
+    taskId: string,
+    title: string,
+    todolistId: string
+  ) => {
+    const newTodolistTasks = {
+      ...tasks,
+      [todolistId]: tasks[todolistId].map((t) =>
+        t.id === taskId ? { ...t, title: title } : t
+      ),
+    };
+    setTasks(newTodolistTasks);
+  };
 
   //  Todolist
+  // Изменение Фильтра тасок
   const changeTodolistFilter = (
     newFilter: FilterValuesType,
     todolistId: string
@@ -114,12 +128,12 @@ function App() {
       )
     );
   };
-
+  // Удаление тудулиста
   const removeTodolist = (todolistId: string) => {
     setTodolist(todolist.filter((tl) => tl.id !== todolistId));
     delete tasks[todolistId];
   };
-
+  // Добавление тудулиста
   const addTodolist = (title: string) => {
     const todolistID = v1();
     const newTodolist: TodolistType = {
@@ -131,25 +145,13 @@ function App() {
     setTodolist([...todolist, newTodolist]);
     setTasks({ ...tasks, [todolistID]: [] });
   };
-
-  const changeTodolistItem = (
-    title: string,
-    todolistId: string
-  ) => {
-    const newTodolistTitle = todolist.map(tl => {
-      return tl.id === todolistId ? {...tl, title} : tl
-    })
+  // Изменение название тудулиста
+  const changeTodolistItem = (title: string, todolistId: string) => {
+    const newTodolistTitle = todolist.map((tl) => {
+      return tl.id === todolistId ? { ...tl, title } : tl;
+    });
     setTodolist(newTodolistTitle);
   };
-
-  const changeTaskTitle = (taskId: string, title: string, todolistId: string) => {
-    const newTodolistTasks = {
-      ...tasks,
-      [todolistId]: tasks[todolistId].map(t => t.id === taskId ? {...t, title: title} : t)
-    }
-    setTasks(newTodolistTasks)
-  }
-
 
   // GUI
 
@@ -171,13 +173,13 @@ function App() {
             title={tl.title}
             tasks={filteredTasks}
             filter={tl.filter}
-            removeTask={removeTask}
-            changeTodolistFilter={changeTodolistFilter}
-            removeTodolist={removeTodolist}
-            addTask={addTask}
-            setTaskNewStatus={setTaskNewStatus}
-            changeTodolistItem={changeTodolistItem}
-            changeTaskTitle={changeTaskTitle}
+            removeTask={removeTask} // удаление таски
+            addTask={addTask} // добавление таски
+            setTaskNewStatus={setTaskNewStatus} // Изменение статуса таски
+            changeTaskTitle={changeTaskTitle} // Изменение название тасок
+            changeTodolistFilter={changeTodolistFilter} // Изменение Фильтра тасок
+            removeTodolist={removeTodolist} // Удаление тудулиста
+            changeTodolistItem={changeTodolistItem} // Изменение название тудулиста
           />
         );
       })}

@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { FilterValuesType, TaskType } from "../App";
-import { Button } from "./Button";
+import { Button } from "../components/Button";
 
 type TodolistPropsType = {
   title: string;
