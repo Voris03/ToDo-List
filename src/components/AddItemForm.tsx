@@ -1,5 +1,7 @@
 import React, { ChangeEvent, useState, KeyboardEvent } from "react";
 import { Button } from "./Button";
+import IconButton from '@mui/material/IconButton';
+import AddBoxIcon from '@mui/icons-material/AddBox';
 
 type AddItemFormPropsType = {
   addItem: (title: string) => void;
@@ -38,7 +40,10 @@ export const AddItemForm = ({ addItem }: AddItemFormPropsType) => {
         className={error ? "error" : ""}
       />
 
-      <Button title={"+"} onClickHandler={addItemHandler} />
+      <IconButton>
+        <AddBoxIcon />
+      </IconButton>
+      {/* <Button title={"+"} onClickHandler={addItemHandler} /> */}
       {error && <div className={"error-message"}>{error}</div>}
     </div>
   );
