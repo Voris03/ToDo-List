@@ -3,6 +3,21 @@ import "./App.css";
 import { TodoList } from "./ToDoList/Todolist";
 import { v1 } from "uuid";
 import { AddItemForm } from "./components/AddItemForm";
+import {
+  AppBar,
+  Box,
+  Button,
+  Container,
+  CssBaseline,
+  Grid2,
+  IconButton,
+  Paper,
+  Toolbar,
+} from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
+import { MenuButton } from "./components/MenuButton";
+import { blue, cyan, green } from "@mui/material/colors";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
 
 // Create +
 // Read(filter, sort, search, view mode) +
@@ -34,12 +49,12 @@ function App() {
   const [todolist, setTodolist] = useState<Array<TodolistType>>([
     {
       id: todolistId_1,
-      title: "What to learn",
+      title: "What to learn?",
       filter: "all",
     },
     {
       id: todolistId_2,
-      title: "What to but",
+      title: "What to buy?",
       filter: "all",
     },
   ]);
@@ -155,34 +170,70 @@ function App() {
 
   // GUI
 
+  const theme = createTheme({
+    palette: {
+      primary: blue,
+      secondary: cyan,
+    },
+  });
+
   return (
     <div className="App">
-      <AddItemForm addItem={addTodolist} />
-      {todolist.map((tl) => {
-        let filteredTasks: TaskType[] = tasks[tl.id];
-        if (tl.filter === "active") {
-          filteredTasks = filteredTasks.filter((task) => task.isDone === false);
-        }
-        if (tl.filter === "completed") {
-          filteredTasks = filteredTasks.filter((task) => task.isDone === true);
-        }
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <AppBar position="static">
+          <Toolbar sx={{ justifyContent: "space-between" }}>
+            <IconButton color="inherit">
+              <MenuIcon />
+            </IconButton>
+            <Box>
+              <MenuButton>Login</MenuButton>
+              <MenuButton>Logout</MenuButton>
+              <MenuButton>FAQ</MenuButton>
+            </Box>
+          </Toolbar>
+        </AppBar>
+        <Container>
+          <Grid2 container sx={{ p: "15px 0" }}>
+            <AddItemForm addItem={addTodolist} />
+          </Grid2>
+          <Grid2 container spacing={4}>
+            {todolist.map((tl) => {
+              let filteredTasks: TaskType[] = tasks[tl.id];
+              if (tl.filter === "active") {
+                filteredTasks = filteredTasks.filter(
+                  (task) => task.isDone === false
+                );
+              }
+              if (tl.filter === "completed") {
+                filteredTasks = filteredTasks.filter(
+                  (task) => task.isDone === true
+                );
+              }
 
-        return (
-          <TodoList
-            todolistId={tl.id}
-            title={tl.title}
-            tasks={filteredTasks}
-            filter={tl.filter}
-            removeTask={removeTask} // удаление таски
-            addTask={addTask} // добавление таски
-            setTaskNewStatus={setTaskNewStatus} // Изменение статуса таски
-            changeTaskTitle={changeTaskTitle} // Изменение название тасок
-            changeTodolistFilter={changeTodolistFilter} // Изменение Фильтра тасок
-            removeTodolist={removeTodolist} // Удаление тудулиста
-            changeTodolistItem={changeTodolistItem} // Изменение название тудулиста
-          />
-        );
-      })}
+              return (
+                <Grid2>
+                  <Paper elevation={4} sx={{ p: "20px" }}>
+                    <TodoList
+                      todolistId={tl.id}
+                      title={tl.title}
+                      tasks={filteredTasks}
+                      filter={tl.filter}
+                      removeTask={removeTask} // удаление таски
+                      addTask={addTask} // добавление таски
+                      setTaskNewStatus={setTaskNewStatus} // Изменение статуса таски
+                      changeTaskTitle={changeTaskTitle} // Изменение название тасок
+                      changeTodolistFilter={changeTodolistFilter} // Изменение Фильтра тасок
+                      removeTodolist={removeTodolist} // Удаление тудулиста
+                      changeTodolistItem={changeTodolistItem} // Изменение название тудулиста
+                    />
+                  </Paper>
+                </Grid2>
+              );
+            })}
+          </Grid2>
+        </Container>
+      </ThemeProvider>
     </div>
   );
 }
