@@ -6,18 +6,17 @@ import { AddItemForm } from "./components/AddItemForm";
 import {
   AppBar,
   Box,
-  Button,
   Container,
   CssBaseline,
   Grid2,
   IconButton,
   Paper,
+  Switch,
   Toolbar,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { MenuButton } from "./components/MenuButton";
-import { blue, cyan, green } from "@mui/material/colors";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 // Create +
 // Read(filter, sort, search, view mode) +
@@ -168,17 +167,23 @@ function App() {
     setTodolist(newTodolistTitle);
   };
 
-  // GUI
+
+  const [isDark, setIsDark] = useState(false);
 
   const theme = createTheme({
     palette: {
-      primary: blue,
-      secondary: cyan,
+      primary: {
+        main: '#6e713e'
+      },
+      secondary: {
+        main: '#604d4d'
+      } ,
+      mode: isDark ? "dark" : "light",
     },
   });
-
+  // GUI
   return (
-    <div className="App">
+    <div>
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <AppBar position="static">
@@ -190,6 +195,7 @@ function App() {
               <MenuButton>Login</MenuButton>
               <MenuButton>Logout</MenuButton>
               <MenuButton>FAQ</MenuButton>
+              <Switch onChange={() => setIsDark(!isDark)}/>
             </Box>
           </Toolbar>
         </AppBar>

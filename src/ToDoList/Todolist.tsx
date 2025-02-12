@@ -1,9 +1,8 @@
-import React, { useState, KeyboardEvent, ChangeEvent } from "react";
+import React, { ChangeEvent } from "react";
 import { FilterValuesType, TaskType } from "../App";
 // import { Button } from "../components/Button";
 import { AddItemForm } from "../components/AddItemForm";
 import { EditableSpan } from "../components/EditableSpan";
-import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Checkbox from "@mui/material/Checkbox";
