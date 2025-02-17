@@ -127,9 +127,7 @@ export const TodoList = (props: TodoListPropsType) => {
       </Box>
 
       <AddItemForm addItem={addTaskHandler} />
-      <Box sx={{p: '10px'}}>
-      {taskList}
-      </Box>
+      <Box sx={{ p: "10px" }}>{taskList}</Box>
 
       <Box sx={filterButtonsContainerSx}>
         <FilterButton
@@ -156,8 +154,6 @@ export const TodoList = (props: TodoListPropsType) => {
             props.changeTodolistFilter("completed", props.todolistId);
           }}
         />
-
-
       </Box>
     </div>
   );
