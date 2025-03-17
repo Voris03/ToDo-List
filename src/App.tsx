@@ -130,7 +130,8 @@ function App() {
     setTasks(newTodolistTasks);
   };
 
-  //  Todolist
+  //  Todolist => only one function
+  
   // Изменение Фильтра тасок
   const changeTodolistFilter = (
     newFilter: FilterValuesType,
